@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  locastic_task_db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'user'
+    ports:
+      - 3333:3306
+    container_name: locastic_task_db
+    networks:
+      - locastic_task_rest
+
+  locastic_task_web:
+    build:
+      context: .docker-config/web
+    volumes:
+      - '.:/var/www'
+      - './.docker-config/web/vhost.conf:/etc/apache2/sites-available/000-default.conf'
+    ports:
+      - 8888:80
+    container_name: locastic_task_web
+    networks:
+      - locastic_task_rest
+
+  symfony_adminer:
+    image: adminer
+    ports:
+      - 9999:8080
+    container_name: locastic_task_adm
+    networks:
+      - locastic_task_rest
+
+networks:
+  locastic_task_rest:
+    name: locastic_task_rest
