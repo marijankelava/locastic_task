@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RaceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,6 +28,16 @@ class Race
      * @ORM\Column(type="string", length=255)
      */
     private $date;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Results::class, mappedBy="race", orphanRemoval=true)
+     */
+    private $results;
+
+    public function __construct()
+    {
+        $this->results = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -52,6 +64,36 @@ class Race
     public function setDate(string $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Results>
+     */
+    public function getResults(): Collection
+    {
+        return $this->results;
+    }
+
+    public function addResult(Results $result): self
+    {
+        if (!$this->results->contains($result)) {
+            $this->results[] = $result;
+            $result->setRace($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResult(Results $result): self
+    {
+        if ($this->results->removeElement($result)) {
+            // set the owning side to null (unless already changed)
+            if ($result->getRace() === $this) {
+                $result->setRace(null);
+            }
+        }
 
         return $this;
     }

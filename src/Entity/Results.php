@@ -37,6 +37,12 @@ class Results
      */
     private $placement;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Race::class, inversedBy="results")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $race;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +92,18 @@ class Results
     public function setPlacement(?int $placement): self
     {
         $this->placement = $placement;
+
+        return $this;
+    }
+
+    public function getRace(): ?Race
+    {
+        return $this->race;
+    }
+
+    public function setRace(?Race $race): self
+    {
+        $this->race = $race;
 
         return $this;
     }
