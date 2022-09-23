@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Race;
 use App\Form\RaceFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Services\CsvService;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,10 +16,12 @@ class RaceController extends AbstractController
 {
 
     private $em;
-    private $movieRepository;
-    public function __construct(EntityManagerInterface $em) 
+    private $csvService;
+
+    public function __construct(EntityManagerInterface $em, CsvService $csvService) 
     {
         $this->em = $em;
+        $this->csvService = $csvService;
     }
 
     /**
@@ -53,13 +56,13 @@ class RaceController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $newRace = $form->getData();
                 $attachment = $form->get('attachment')->getData();
-                //var_dump($newRace, $attachment);
-            }/*else {
-                return $this->redirectToRoute('app_race');
-            }*/
-
-            $this->em->persist($newRace);
-            $this->em->flush();
+                //dd($attachment);
+                $raceData = $this->csvService->parseCsv($attachment);
+                //dd($raceData);
+            }
+            
+            //$this->em->persist($newRace);
+            //$this->em->flush();
 
         return $this->render('results/create.html.twig', [
             'form' => $form->createView(),
