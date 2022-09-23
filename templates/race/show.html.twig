@@ -1,4 +1,4 @@
-{% extends "base.html.twig" %}
+{% extends "./base.html.twig" %}
 
 {% block title %}
     Results page
@@ -6,7 +6,7 @@
 
 {% block body %}
 
-    {% for race in races %}
+    {% for result in results %}
         <li> {{ raceName }} </li>
     {% endfor %}
     
