@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entity\Results;
 use App\Entity\Race;
 use App\Form\RaceFormType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -12,17 +13,28 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class CsvService
 {
-    public function parseCsv($attachment): array
+    public function parseCsv($attachment)
     {
         $open = fopen($attachment, "r");
         $data = fgetcsv($open, 1000, ",");
         while (($data = fgetcsv($open, 1000, ",")) !== FALSE) 
-            {        
-            $array[] = $data; 
+            { 
+            //dd($data);      
+            //$array[] = $data;
+            
+            $results = new Results();
+            $results->setFullName($data[0]);
+            $results->setDistance($data[1]);
+            $results->setRaceTime($data[2]);
+            $array[] = $results;
+
+            /*$data[$key]['id'] = $meal['id'];    
+            $data[$key]['title'] = $meal['title'];    
+            $data[$key]['description'] = $meal['description'];*/
             }
-  
+            dd($array);
         fclose($open);
         //dd($array);
-        return $array;
+        return $results;
     }        
 }
