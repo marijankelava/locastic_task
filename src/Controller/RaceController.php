@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Results;
 use App\Entity\Race;
 use App\Form\RaceFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,13 +57,22 @@ class RaceController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $newRace = $form->getData();
                 $attachment = $form->get('attachment')->getData();
-                //dd($attachment);
+                //$newRace->addResult();
+                
                 $raceData = $this->csvService->parseCsv($attachment);
-                //dd($raceData);
-            }
             
-            //$this->em->persist($newRace);
-            //$this->em->flush();
+            $this->em->persist($newRace);
+            $this->em->flush();
+
+            foreach($raceData as $race){
+                $race->setRace($newRace);
+                $this->em->persist($race);
+                $this->em->flush();
+            }
+
+            return $this->redirectToRoute('app_results');
+
+        }
 
         return $this->render('results/create.html.twig', [
             'form' => $form->createView(),

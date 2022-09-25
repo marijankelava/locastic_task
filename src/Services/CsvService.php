@@ -28,13 +28,10 @@ final class CsvService
             $results->setRaceTime($data[2]);
             $array[] = $results;
 
-            /*$data[$key]['id'] = $meal['id'];    
-            $data[$key]['title'] = $meal['title'];    
-            $data[$key]['description'] = $meal['description'];*/
             }
-            dd($array);
+            
         fclose($open);
         //dd($array);
-        return $results;
+        return $array;
     }        
 }

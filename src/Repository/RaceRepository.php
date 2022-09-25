@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query;
 
 /**
  * @extends ServiceEntityRepository<Race>
@@ -75,4 +76,18 @@ class RaceRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findAll(): array
+    {
+        $value = 'medium';
+
+            $qb = $this->createQueryBuilder('r')
+              ->leftJoin('r.results', 'res')
+              ->addSelect('res.fullName, res.raceTime, res.placement, res.distance');
+            $qb->andWhere('res.distance = :val')
+               ->setParameter('val', $value);
+              //->orderBy('res.placement', 'ASC');
+
+            return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
 }
