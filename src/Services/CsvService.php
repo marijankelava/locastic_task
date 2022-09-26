@@ -27,7 +27,6 @@ final class CsvService
             $results->setDistance($data[1]);
             $results->setRaceTime($data[2]);
             $array[] = $results;
-
             }
             
         fclose($open);

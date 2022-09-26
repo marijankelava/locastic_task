@@ -44,10 +44,13 @@ class ResultsController extends AbstractController
 
         $mediumTime = $this->averageTimeService->averageMediumTime($mediumResults);
         $longTime = $this->averageTimeService->averageLongTime($longResults);
-        dd($mediumTime, $longTime);
+        //dd($mediumTime, $longTime);
         
         return $this->render('results/show.html.twig', [
-            'results' => 'Result',
+            'mediumTime' => $mediumTime,
+            'mediumResults' => $mediumResults,
+            'longTime' => $longTime,
+            'longResults' => $longResults
         ]);
     }
 }

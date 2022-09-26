@@ -6,8 +6,59 @@
 
 {% block body %}
 
-    {% for result in results %}
-        <li> {{ raceName }} </li>
+    <table>
+        <tr>
+            <th>Medium distance</th>
+        </tr>
+
+        <tr>
+            <td>Average {{ mediumTime }}</td>
+        </tr>
+
+    <table>
+        <tr>
+            <th>Full name</th>
+            <th>Finish time</th>
+            <th>Placement</th>
+        </tr>
+    {% for mediumResult in mediumResults %}
+
+            <tr>
+                <td>{{ mediumResult.fullName }}</td>
+                <td>{{ mediumResult.raceTime }}</td>
+                <td>{{ mediumResult.placement }}</td>
+            </tr>
+        
     {% endfor %}
+
+    </table>
+    
+
+    <table>
+        <tr>
+            <th>Long distance</th>
+        </tr>
+
+        <tr>
+            <td>Average {{ longTime }}</td>
+        </tr>
+
+    <table>
+        <tr>
+            <th>Full name</th>
+            <th>Finish time</th>
+            <th>Placement</th>
+        </tr>
+    {% for longResult in longResults %}
+
+            <tr>
+                <td>{{ longResult.fullName }}</td>
+                <td>{{ longResult.raceTime }}</td>
+                <td>{{ longResult.placement }}</td>
+            </tr>
+        
+    {% endfor %}
+
+    </table>
     
 {% endblock %}
