@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Services\AverageTimeService;
 use App\Entity\Race;
 use App\Entity\Results;
 use App\Form\RaceFormType;
@@ -14,10 +15,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class ResultsController extends AbstractController
 {
     private $raceRepository;
+    private $averageTimeService;
 
-    public function __construct(RaceRepository $raceRepository)
+    public function __construct(RaceRepository $raceRepository, AverageTimeService $averageTimeService)
     {
         $this->raceRepository = $raceRepository;
+        $this->averageTimeService = $averageTimeService;
     }
 
     /**
@@ -35,8 +38,14 @@ class ResultsController extends AbstractController
      */
     public function results(): Response
     {
-        $results = $this->raceRepository->findAll();
-        dd($results);
+        $mediumResults = $this->raceRepository->findMedium();
+        $longResults = $this->raceRepository->findLong();
+        //dd($mediumResults, $longResults);
+
+        $mediumTime = $this->averageTimeService->averageMediumTime($mediumResults);
+        $longTime = $this->averageTimeService->averageLongTime($longResults);
+        dd($mediumTime, $longTime);
+        
         return $this->render('results/show.html.twig', [
             'results' => 'Result',
         ]);

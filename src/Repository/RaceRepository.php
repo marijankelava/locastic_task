@@ -77,15 +77,29 @@ class RaceRepository extends ServiceEntityRepository
     }
     */
 
-    public function findAll(): array
+    public function findMedium(): array
     {
         $value = 'medium';
-
+        
             $qb = $this->createQueryBuilder('r')
               ->leftJoin('r.results', 'res')
               ->addSelect('res.fullName, res.raceTime, res.placement, res.distance');
-            $qb->andWhere('res.distance = :val')
-               ->setParameter('val', $value);
+            $qb->where($qb->expr()->like('res.distance', ':val'))
+               ->setParameter('val', '%' . $value . '%' );
+              //->orderBy('res.placement', 'ASC');
+
+            return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
+
+    public function findLong(): array
+    {
+        $value = 'long';
+        
+            $qb = $this->createQueryBuilder('r')
+              ->leftJoin('r.results', 'res')
+              ->addSelect('res.fullName, res.raceTime, res.placement, res.distance');
+            $qb->where($qb->expr()->like('res.distance', ':val'))
+               ->setParameter('val', '%' . $value . '%' );
               //->orderBy('res.placement', 'ASC');
 
             return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);

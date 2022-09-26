@@ -57,7 +57,6 @@ class RaceController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $newRace = $form->getData();
                 $attachment = $form->get('attachment')->getData();
-                //$newRace->addResult();
                 
                 $raceData = $this->csvService->parseCsv($attachment);
             
