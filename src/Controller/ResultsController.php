@@ -8,6 +8,7 @@ use App\Entity\Results;
 use App\Form\RaceFormType;
 use App\Form\ResultsFormType;
 use App\Repository\RaceRepository;
+use App\Repository\ResultsRepository;
 use App\Services\PlacementService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +19,12 @@ class ResultsController extends AbstractController
     private $raceRepository;
     private $averageTimeService;
     private $placementService;
+    private $resultsRepository;
 
-    public function __construct(RaceRepository $raceRepository, AverageTimeService $averageTimeService, PlacementService $placementService)
+    public function __construct(RaceRepository $raceRepository, ResultsRepository $resultsRepository, AverageTimeService $averageTimeService, PlacementService $placementService)
     {
         $this->raceRepository = $raceRepository;
+        $this->resultsRepository = $resultsRepository;
         $this->averageTimeService = $averageTimeService;
         $this->placementService = $placementService;
     }
@@ -43,7 +46,7 @@ class ResultsController extends AbstractController
     {
         $mediumResults = $this->raceRepository->findMedium();
         $longResults = $this->raceRepository->findLong();
-        
+
         //dd($mediumResults);
         //$mediumPlacement = $this->placementService->placementMedium($mediumResults);
         //$longPlacement = $this->placementService->placementLong($longResults);
@@ -62,11 +65,16 @@ class ResultsController extends AbstractController
     }
 
     /**
-     * @Route("/results/edit{id}", name="app_results/edit")
+     * @Route("/results/edit/{id}", name="app_edit")
      */
     public function edit($id):Response
     {
-        //dd($id);
-        //exit;
+        $result = $this->resultsRepository->find($id);
+        $form = $this->createForm(ResultsFormType::class, $result);
+
+        return $this->render('results/edit.html.twig', [
+            'result' => $result,
+            'form' => $form->createView()
+        ]);
     }
 }

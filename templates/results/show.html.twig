@@ -8,10 +8,10 @@
 
     <table>
         <tr>
-            <th>Race name {{ mediumResults[0][0].raceName }}</th>
+            <th>Race name: {{ mediumResults[0][0].raceName }}</th>
         </tr>
         <tr>
-            <th>Date {{ mediumResults[0][0].date }}</th>
+            <th>Date: {{ mediumResults[0][0].date }}</th>
         </tr>
         <tr>
             <th>Medium distance</th>
@@ -34,7 +34,7 @@
                 <td>{{ mediumResult.raceTime }}</td>
                 <td>{{ mediumResult.placement }}</td>
                 <td>
-                    <a href="results/edit/ {{ mediumResult.id }}"
+                    <a href="results/edit/{{ mediumResult.id }}"
                     class="bg-green-500 font-bold py-2 px-4 rounded transition-all hover:bg-green-300">Edit
                     </a>
                 </td>
@@ -48,10 +48,10 @@
 
     <table>
         <tr>
-            <th>Race name {{ longResults[0][0].raceName }}</th>
+            <th>Race name: {{ longResults[0][0].raceName }}</th>
         </tr>
         <tr>
-            <th>Date {{ longResults[0][0].date }}</th>
+            <th>Date: {{ longResults[0][0].date }}</th>
         </tr>
         <tr>
             <th>Long distance</th>

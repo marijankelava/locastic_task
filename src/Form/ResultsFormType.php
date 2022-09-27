@@ -14,8 +14,8 @@ class ResultsFormType extends AbstractType
         $builder
             ->add('fullName')
             ->add('raceTime')
-            ->add('distance')
-            ->add('placement')
+            //->add('distance')
+            //->add('placement')
             //->add('race')
         ;
     }
