@@ -43,12 +43,14 @@ class ResultsController extends AbstractController
     {
         $mediumResults = $this->raceRepository->findMedium();
         $longResults = $this->raceRepository->findLong();
+        
         //dd($mediumResults);
-        $mediumPlacement = $this->placementService->placementMedium($mediumResults);
-        $longPlacement = $this->placementService->placementLong($longResults);
+        //$mediumPlacement = $this->placementService->placementMedium($mediumResults);
+        //$longPlacement = $this->placementService->placementLong($longResults);
         
         $mediumTime = $this->averageTimeService->averageMediumTime($mediumResults);
         $longTime = $this->averageTimeService->averageLongTime($longResults);
+
         //dd($mediumTime, $longTime);
         
         return $this->render('results/show.html.twig', [
@@ -57,5 +59,14 @@ class ResultsController extends AbstractController
             'longTime' => $longTime,
             'longResults' => $longResults
         ]);
+    }
+
+    /**
+     * @Route("/results/edit{id}", name="app_results/edit")
+     */
+    public function edit($id):Response
+    {
+        //dd($id);
+        //exit;
     }
 }

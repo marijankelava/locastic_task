@@ -83,7 +83,7 @@ class RaceRepository extends ServiceEntityRepository
         
             $qb = $this->createQueryBuilder('r')
               ->leftJoin('r.results', 'res')
-              ->addSelect('res.fullName, res.raceTime, res.placement, res.distance');
+              ->addSelect('res.id, res.fullName, res.raceTime, res.placement, res.distance');
             $qb->where($qb->expr()->like('res.distance', ':val'))
                ->setParameter('val', '%' . $value . '%' );
               //->orderBy('res.placement', 'ASC');
@@ -97,7 +97,7 @@ class RaceRepository extends ServiceEntityRepository
         
             $qb = $this->createQueryBuilder('r')
               ->leftJoin('r.results', 'res')
-              ->addSelect('res.fullName, res.raceTime, res.placement, res.distance');
+              ->addSelect('res.id, res.fullName, res.raceTime, res.placement, res.distance');
             $qb->where($qb->expr()->like('res.distance', ':val'))
                ->setParameter('val', '%' . $value . '%' );
               //->orderBy('res.placement', 'ASC');
