@@ -11,8 +11,10 @@ use App\Repository\RaceRepository;
 use App\Repository\ResultsRepository;
 use App\Services\PlacementService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ResultsController extends AbstractController
 {
@@ -20,13 +22,20 @@ class ResultsController extends AbstractController
     private $averageTimeService;
     private $placementService;
     private $resultsRepository;
+    private $em;
 
-    public function __construct(RaceRepository $raceRepository, ResultsRepository $resultsRepository, AverageTimeService $averageTimeService, PlacementService $placementService)
+    public function __construct(
+        RaceRepository $raceRepository,
+        ResultsRepository $resultsRepository,
+        AverageTimeService $averageTimeService,
+        PlacementService $placementService,
+        EntityManagerInterface $em)
     {
         $this->raceRepository = $raceRepository;
         $this->resultsRepository = $resultsRepository;
         $this->averageTimeService = $averageTimeService;
         $this->placementService = $placementService;
+        $this->em = $em;
     }
 
     /**
@@ -67,10 +76,23 @@ class ResultsController extends AbstractController
     /**
      * @Route("/results/edit/{id}", name="app_edit")
      */
-    public function edit($id):Response
+    public function edit($id, Request $request):Response
     {
         $result = $this->resultsRepository->find($id);
         $form = $this->createForm(ResultsFormType::class, $result);
+
+        $form->handleRequest($request);
+
+        //dd($result);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $result->setFullName($form->get('fullName')->getData());
+            $result->setRaceTime($form->get('raceTime')->getData());
+            //dd($result);
+            $this->em->flush();
+
+            return $this->redirectToRoute('app_results');
+        }
 
         return $this->render('results/edit.html.twig', [
             'result' => $result,
