@@ -17,11 +17,9 @@ final class CsvService
     {
         $open = fopen($attachment, "r");
         $data = fgetcsv($open, 1000, ",");
+        
         while (($data = fgetcsv($open, 1000, ",")) !== FALSE) 
             { 
-            //dd($data);      
-            //$array[] = $data;
-            
             $results = new Results();
             $results->setFullName($data[0]);
             $results->setDistance($data[1]);

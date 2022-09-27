@@ -59,7 +59,7 @@ class RaceController extends AbstractController
                 $attachment = $form->get('attachment')->getData();
                 
                 $raceData = $this->csvService->parseCsv($attachment);
-            
+                dd($raceData);
             $this->em->persist($newRace);
             $this->em->flush();
 

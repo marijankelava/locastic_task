@@ -10,29 +10,15 @@ final class AverageTimeService
         $timeArray[] = $time['raceTime'];
         }
             foreach($timeArray as $runner){
-                $runner = explode(':', $runner);
+
+                $totalTime[] = strtotime($runner);
                 
-                $miliSeconds[] = $runner[0] * 60 * 1000 + $runner[1] * 1000 + $runner[2] * 10;
+                $avg = array_sum($totalTime) / count($totalTime);
 
-                $avg = array_sum($miliSeconds) / count($miliSeconds);
-
-                $minutes = (int) floor($avg / 60 /1000);
-
-                $seconds = floor(($avg - ($minutes * 60000)) / 1000);
-
-                if ($seconds < 10) {
-                    $seconds = 0 . $seconds;
-                }
-
-                $miliSec = ceil(($avg - ($minutes * 60000) - ($seconds * 1000)) / 10);
-
-                $avgMedium = [];
-
-                array_push($avgMedium, $minutes, $seconds, $miliSec);
+                $avgMedium = date('H:i:s',$avg);    
             }
-            //dd(implode(':', $avgMedium));
-
-        return implode(':', $avgMedium);
+            //dd($avgMedium);
+        return $avgMedium;
     }
 
     public function averageLongTime($longResults)
@@ -41,28 +27,14 @@ final class AverageTimeService
         $timeArray[] = $time['raceTime'];
         }
             foreach($timeArray as $runner){
-                $runner = explode(':', $runner);
-                //dd($runner);
-                $miliSeconds[] = $runner[0] * 60 * 1000 + $runner[1] * 1000 + $runner[2] * 10;
-
-                $avg = array_sum($miliSeconds) / count($miliSeconds);
-
-                $minutes = (int) floor($avg / 60 /1000);
-
-                $seconds = floor(($avg - ($minutes * 60000)) / 1000);
-
-                if ($seconds < 10) {
-                    $seconds = 0 . $seconds;
-                }
-
-                $miliSec = ceil(($avg - ($minutes * 60000) - ($seconds * 1000)) / 10);
-
-                $avgLong = [];
-
-                array_push($avgLong, $minutes, $seconds, $miliSec);
+                
+                $totalTime[] = strtotime($runner);
+                
+                $avg = array_sum($totalTime) / count($totalTime);
+                
+                $avgLong = date('H:i:s',$avg);
             }
-            //dd(implode(':', $avgLong));
-
-        return implode(':', $avgLong);
+            //dd($avgLong);
+        return $avgLong;
     }
 }

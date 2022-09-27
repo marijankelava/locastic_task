@@ -8,6 +8,7 @@ use App\Entity\Results;
 use App\Form\RaceFormType;
 use App\Form\ResultsFormType;
 use App\Repository\RaceRepository;
+use App\Services\PlacementService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,11 +17,13 @@ class ResultsController extends AbstractController
 {
     private $raceRepository;
     private $averageTimeService;
+    private $placementService;
 
-    public function __construct(RaceRepository $raceRepository, AverageTimeService $averageTimeService)
+    public function __construct(RaceRepository $raceRepository, AverageTimeService $averageTimeService, PlacementService $placementService)
     {
         $this->raceRepository = $raceRepository;
         $this->averageTimeService = $averageTimeService;
+        $this->placementService = $placementService;
     }
 
     /**
@@ -40,8 +43,10 @@ class ResultsController extends AbstractController
     {
         $mediumResults = $this->raceRepository->findMedium();
         $longResults = $this->raceRepository->findLong();
-        //dd($mediumResults, $longResults);
-
+        //dd($mediumResults);
+        $mediumPlacement = $this->placementService->placementMedium($mediumResults);
+        $longPlacement = $this->placementService->placementLong($longResults);
+        
         $mediumTime = $this->averageTimeService->averageMediumTime($mediumResults);
         $longTime = $this->averageTimeService->averageLongTime($longResults);
         //dd($mediumTime, $longTime);
