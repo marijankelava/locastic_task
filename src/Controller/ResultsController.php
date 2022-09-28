@@ -10,6 +10,7 @@ use App\Form\ResultsFormType;
 use App\Repository\RaceRepository;
 use App\Repository\ResultsRepository;
 use App\Services\PlacementService;
+use App\Services\TransformerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,35 +19,29 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ResultsController extends AbstractController
 {
-    private $raceRepository;
-    private $averageTimeService;
-    private $placementService;
-    private $resultsRepository;
-    private $em;
+    private RaceRepository $raceRepository;
+    private AverageTimeService $averageTimeService;
+    private PlacementService $placementService;
+    private ResultsRepository $resultsRepository;
+    private TransformerService $transformerService;
+    private EntityManagerInterface $em;
 
     public function __construct(
         RaceRepository $raceRepository,
         ResultsRepository $resultsRepository,
         AverageTimeService $averageTimeService,
         PlacementService $placementService,
-        EntityManagerInterface $em)
+        TransformerService $transformerService,
+        EntityManagerInterface $em
+        )
     {
         $this->raceRepository = $raceRepository;
         $this->resultsRepository = $resultsRepository;
         $this->averageTimeService = $averageTimeService;
         $this->placementService = $placementService;
+        $this->transformerService = $transformerService;
         $this->em = $em;
     }
-
-    /**
-     * @Route("/results", name="app_results")
-     */
-    /*public function index(): Response
-    {
-        return $this->render('results/show.html.twig', [
-            'results' => 'Result',
-        ]);
-    }*/
 
     /**
      * @Route("/results", name="app_results")
@@ -55,15 +50,15 @@ class ResultsController extends AbstractController
     {
         $mediumResults = $this->raceRepository->findMedium();
         $longResults = $this->raceRepository->findLong();
-
-        //dd($mediumResults);
-        //$mediumPlacement = $this->placementService->placementMedium($mediumResults);
-        //$longPlacement = $this->placementService->placementLong($longResults);
         
         $mediumTime = $this->averageTimeService->averageMediumTime($mediumResults);
         $longTime = $this->averageTimeService->averageLongTime($longResults);
 
+        //$transformedMed = $this->transformerService->transformMedium($mediumResults);
+
+        //dd($mediumResults, $longResults);
         //dd($mediumTime, $longTime);
+        //dd($transformedMed);
         
         return $this->render('results/show.html.twig', [
             'mediumTime' => $mediumTime,

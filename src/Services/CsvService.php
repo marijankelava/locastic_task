@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class CsvService
 {
-    private $placementService;
+    private PlacementService $placementService;
 
     public function __construct(PlacementService $placementService)
     {

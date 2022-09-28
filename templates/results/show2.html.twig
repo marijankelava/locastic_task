@@ -1,0 +1,92 @@
+{% extends "./base.html.twig" %}
+
+{% block title %}
+    Results page
+{% endblock %}
+
+{% block body %}
+        
+    <table>
+        <tr>
+            <th>Full name</th>
+            <th>Finish time</th>
+            <th>Placement</th>
+        </tr>
+
+    {% set i = 0 %}    
+    {% for mediumResult in mediumResults %}
+    
+    <tr>
+            <th>Race name: {{ mediumResult[i].raceName }}</th>
+        </tr>
+        <tr>
+            <th>Date: {{ mediumResult[i].date }}</th>
+        </tr>
+        <tr>
+            <th>Medium distance</th>
+        </tr>
+
+        <tr>
+            <td>Average {{ mediumTime }}</td>
+        </tr>    
+    {#{% set i = i + 1 %}#}
+        
+        {% for mediumResult in mediumResults %}
+        
+                <tr>
+                    <td>{{ mediumResult.fullName }}</td>
+                    <td>{{ mediumResult.raceTime }}</td>
+                    <td>{{ mediumResult.placement }}</td>
+                    <td>
+                        <a href="results/edit/{{ mediumResult.id }}"
+                        class="bg-green-500 font-bold py-2 px-4 rounded transition-all hover:bg-green-300">Edit
+                        </a>
+                    </td>
+                    
+                </tr>
+            
+        {% endfor %}
+    {% endfor %}
+
+    </table>
+    
+
+    <table>
+        <tr>
+            <th>Race name: {{ longResults[0][0].raceName }}</th>
+        </tr>
+        <tr>
+            <th>Date: {{ longResults[0][0].date }}</th>
+        </tr>
+        <tr>
+            <th>Long distance</th>
+        </tr>
+
+        <tr>
+            <td>Average {{ longTime }}</td>
+        </tr>
+
+    <table>
+        <tr>
+            <th>Full name</th>
+            <th>Finish time</th>
+            <th>Placement</th>
+        </tr>
+    {% for longResult in longResults %}
+
+            <tr>
+                <td>{{ longResult.fullName }}</td>
+                <td>{{ longResult.raceTime }}</td>
+                <td>{{ longResult.placement }}</td>
+                <td>
+                    <a href="results/edit/ {{ longResult.id }}"
+                    class="bg-green-500 font-bold py-2 px-4 rounded transition-all hover:bg-green-300">Edit
+                    </a>
+                </td>
+            </tr>
+        
+    {% endfor %}
+
+    </table>
+    
+{% endblock %}
