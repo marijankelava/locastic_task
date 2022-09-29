@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query;
 
 /**
  * @extends ServiceEntityRepository<Results>
@@ -75,4 +76,12 @@ class ResultsRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getResults(string $distance): array
+    {     
+            $qb = $this->createQueryBuilder('r');
+            $qb->where($qb->expr()->like('r.distance', ':val'))
+               ->setParameter('val', '%' . $distance . '%' )->orderBy('r.raceTime', 'ASC');
+
+            return $qb->getQuery()->getResult();
+    }
 }

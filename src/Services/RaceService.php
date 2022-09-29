@@ -34,10 +34,23 @@ final class RaceService
         $this->em->persist($race);
         $this->em->flush();
 
-        $finalResult = array_merge($mediumRaceResults, $longRaceResults);
-        //dd($finalResult);
+        //$finalResult = array_merge($mediumRaceResults, $longRaceResults);
+
         $i = 1;
-        foreach($finalResult as $final){
+        foreach($mediumRaceResults as $final){
+            $result = new Results();
+            $result->setRace($race);
+            $result->setFullName($final['fullName']);
+            $result->setDistance($final['distance']);
+            $result->setRaceTime($final['raceTime']);
+            $result->setPlacement($i);
+            $this->em->persist($result);
+            $this->em->flush();
+            $i++;
+        }
+
+        $i = 1;
+        foreach($longRaceResults as $final){
             $result = new Results();
             $result->setRace($race);
             $result->setFullName($final['fullName']);

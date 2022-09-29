@@ -99,7 +99,7 @@ class RaceRepository extends ServiceEntityRepository
             return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
-    public function editMedium(): array
+    public function findMedium(): array
     {
         $value = 'medium';
         
@@ -113,7 +113,7 @@ class RaceRepository extends ServiceEntityRepository
             return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
-    public function editLong(): array
+    public function findLong(): array
     {
         $value = 'long';
         

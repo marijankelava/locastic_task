@@ -17,17 +17,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class RaceController extends AbstractController
 {
 
-    private $em;
     private $fileService;
     private $raceService;
 
     public function __construct(
-        EntityManagerInterface $em, 
         FileService $fileService,
         RaceService $raceService
         ) 
     {
-        $this->em = $em;
         $this->fileService = $fileService;
         $this->raceService = $raceService;
     }

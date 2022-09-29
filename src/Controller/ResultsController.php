@@ -9,9 +9,8 @@ use App\Form\RaceFormType;
 use App\Form\ResultsFormType;
 use App\Repository\RaceRepository;
 use App\Repository\ResultsRepository;
-use App\Services\PlacementService;
-use App\Services\EditPlacementService;
-use App\Services\TransformerService;
+use App\Services\UpdatePlacementService;
+use App\Services\RaceService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,28 +21,25 @@ class ResultsController extends AbstractController
 {
     private RaceRepository $raceRepository;
     private AverageTimeService $averageTimeService;
-    private PlacementService $placementService;
     private ResultsRepository $resultsRepository;
-    private TransformerService $transformerService;
-    private EditPlacementService $editPlacementService;
+    private UpdatePlacementService $updatePlacementService;
+    private RaceService $raceService;
     private EntityManagerInterface $em;
 
     public function __construct(
         RaceRepository $raceRepository,
         ResultsRepository $resultsRepository,
         AverageTimeService $averageTimeService,
-        PlacementService $placementService,
-        TransformerService $transformerService,
-        EditPlacementService $editPlacementService,
+        UpdatePlacementService $updatePlacementService,
+        RaceService $raceService,
         EntityManagerInterface $em
         )
     {
         $this->raceRepository = $raceRepository;
         $this->resultsRepository = $resultsRepository;
         $this->averageTimeService = $averageTimeService;
-        $this->placementService = $placementService;
-        $this->transformerService = $transformerService;
-        $this->editPlacementService = $editPlacementService;
+        $this->updatePlacementService = $updatePlacementService;
+        $this->raceService = $raceService;
         $this->em = $em;
     }
 
@@ -72,17 +68,21 @@ class ResultsController extends AbstractController
 
         $form->handleRequest($request);
 
-        //dd($result);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $result->setFullName($form->get('fullName')->getData());
             $result->setRaceTime($form->get('raceTime')->getData());
-
+            
             $this->em->persist($result);
             $this->em->flush();
 
-            // get all race results, sort them by time and resave
+            $results = $this->resultsRepository->getResults($result->getDistance());
 
+            $i = 1;
+            foreach ($results as $result) {
+                $result->setPlacement($i);
+                $this->em->flush();
+                $i++;
+            }
             return $this->redirectToRoute('app_results');
         }
 
