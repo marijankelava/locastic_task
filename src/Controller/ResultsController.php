@@ -2,12 +2,9 @@
 
 namespace App\Controller;
 
-use App\Services\AverageTimeService;
 use App\Form\ResultsFormType;
 use App\Repository\RaceRepository;
 use App\Repository\ResultsRepository;
-use App\Services\UpdatePlacementService;
-use App\Services\RaceService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,26 +14,17 @@ use Doctrine\ORM\EntityManagerInterface;
 class ResultsController extends AbstractController
 {
     private RaceRepository $raceRepository;
-    private AverageTimeService $averageTimeService;
     private ResultsRepository $resultsRepository;
-    private UpdatePlacementService $updatePlacementService;
-    private RaceService $raceService;
     private EntityManagerInterface $em;
 
     public function __construct(
         RaceRepository $raceRepository,
         ResultsRepository $resultsRepository,
-        AverageTimeService $averageTimeService,
-        UpdatePlacementService $updatePlacementService,
-        RaceService $raceService,
         EntityManagerInterface $em
         )
     {
         $this->raceRepository = $raceRepository;
         $this->resultsRepository = $resultsRepository;
-        $this->averageTimeService = $averageTimeService;
-        $this->updatePlacementService = $updatePlacementService;
-        $this->raceService = $raceService;
         $this->em = $em;
     }
 
