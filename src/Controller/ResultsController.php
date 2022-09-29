@@ -34,12 +34,13 @@ class ResultsController extends AbstractController
     public function results(): Response
     {
  
-        $results = $this->raceRepository->findAll();
-
+        $mediumResults = $this->resultsRepository->getResults('medium');
+        $longResults = $this->resultsRepository->getResults('long');
         //dd($results);
         
         return $this->render('results/show.html.twig', [
-            'results' => $results
+            'mediumResults' => $mediumResults,
+            'longResults' => $longResults
         ]);
     }
 
@@ -57,9 +58,9 @@ class ResultsController extends AbstractController
             $result->setFullName($form->get('fullName')->getData());
             $result->setRaceTime($form->get('raceTime')->getData());
             
-            $this->em->persist($result);
-            $this->em->flush();
+            $this->resultsRepository->add($result);
 
+            // result service resultService->updateResultPlacements($results)
             $results = $this->resultsRepository->getResults($result->getDistance());
 
             $i = 1;

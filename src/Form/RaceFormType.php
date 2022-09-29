@@ -15,13 +15,6 @@ class RaceFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        /*$builder
-            ->add('raceName', TextType::class)
-            ->add('date', TextType::class)
-            ->add('importFile', FileType::class, ['mapped' => false])
-            //->add('saveRace', SubmitType::class)
-        ;*/
-
         $builder
             ->add('raceName', TextType::class, [
                 'attr' => array(

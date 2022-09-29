@@ -6,13 +6,13 @@
 
 {% block body %}
 
-    {% if results|length %}
+    {% if mediumResults|length or longResults|length %}
     <table>
         <tr>
-            <th>Race name: {{ results[0][0].raceName }}</th>
+            <th>Race name: </th>
         </tr>
         <tr>
-            <th>Date: {{ results[0][0].date }}</th>
+            <th>Date: </th>
         </tr>
         <tr>
             <th>Medium distance</th>
@@ -21,15 +21,16 @@
         <tr>
             <td>Average </td>
         </tr>
+    </table>
 
     <table>
+        Medium
         <tr>
             <th>Full name</th>
             <th>Finish time</th>
             <th>Placement</th>
         </tr>
-    {% for result in results %}
-
+        {% for result in mediumResults %}
             <tr>
                 <td>{{ result.fullName }}</td>
                 <td>{{ result.raceTime }}</td>
@@ -41,9 +42,29 @@
                 </td>
                 
             </tr>
-        
-    {% endfor %}
+        {% endfor %}
+      </table>  
 
+    <table>
+    Long
+        <tr>
+            <th>Full name</th>
+            <th>Finish time</th>
+            <th>Placement</th>
+        </tr>
+        {% for result in longResults %}
+            <tr>
+                <td>{{ result.fullName }}</td>
+                <td>{{ result.raceTime }}</td>
+                <td>{{ result.placement }}</td>
+                <td>
+                    <a href="results/edit/{{ result.id }}"
+                    class="bg-green-500 font-bold py-2 px-4 rounded transition-all hover:bg-green-300">Edit
+                    </a>
+                </td>
+                
+            </tr> 
+        {% endfor %}
     </table>
     {% else %}
         There are no results

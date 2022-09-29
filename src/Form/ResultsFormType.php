@@ -13,11 +13,7 @@ class ResultsFormType extends AbstractType
     {
         $builder
             ->add('fullName')
-            ->add('raceTime')
-            //->add('distance')
-            //->add('placement')
-            //->add('race')
-        ;
+            ->add('raceTime');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

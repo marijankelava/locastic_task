@@ -2,13 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Results;
 use App\Entity\Race;
 use App\Form\RaceFormType;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Services\FileService;
 use App\Services\RaceService;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,9 +49,7 @@ class RaceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $race = $form->getData();
             
-            $attachment = $form->get('attachment')->getData();
-            
-            $raceData = $this->fileService->parseRaceCsvToArray($attachment);
+            $raceData = $this->fileService->parseRaceCsvToArray($form->get('attachment')->getData());
 
             // save race data
             $this->raceService->saveRaceResults($race, $raceData);
