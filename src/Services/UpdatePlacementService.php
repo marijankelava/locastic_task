@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Entity\Results;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class UpdatePlacementService

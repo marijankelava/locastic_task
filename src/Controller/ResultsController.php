@@ -3,9 +3,6 @@
 namespace App\Controller;
 
 use App\Services\AverageTimeService;
-use App\Entity\Race;
-use App\Entity\Results;
-use App\Form\RaceFormType;
 use App\Form\ResultsFormType;
 use App\Repository\RaceRepository;
 use App\Repository\ResultsRepository;
