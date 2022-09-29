@@ -6,7 +6,8 @@ use App\Entity\Results;
 use App\Entity\Race;
 use App\Form\RaceFormType;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Services\CsvService;
+use App\Services\FileService;
+use App\Services\RaceService;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,23 +18,19 @@ class RaceController extends AbstractController
 {
 
     private $em;
-    private $csvService;
+    private $fileService;
+    private $raceService;
 
-    public function __construct(EntityManagerInterface $em, CsvService $csvService) 
+    public function __construct(
+        EntityManagerInterface $em, 
+        FileService $fileService,
+        RaceService $raceService
+        ) 
     {
         $this->em = $em;
-        $this->csvService = $csvService;
+        $this->fileService = $fileService;
+        $this->raceService = $raceService;
     }
-
-    /**
-     * @Route("/resulta", name="app_results")
-     */
-    /*public function showResults(): Response
-    {
-        return $this->render('race/index.html.twig', [
-            'controller_name' => 'RaceController',
-        ]);
-    }*/
 
     /**
      * @Route("/race", name="app_race")
@@ -52,25 +49,20 @@ class RaceController extends AbstractController
     {
         $race = new Race();
         $form = $this->createForm(RaceFormType::class, $race);
-        $newRace = [];
-        $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                $newRace = $form->getData();
-                $attachment = $form->get('attachment')->getData();
-                
-                $raceData = $this->csvService->parseCsv($attachment);
-                //dd($raceData);
-            $this->em->persist($newRace);
-            $this->em->flush();
 
-            foreach($raceData as $race){
-                $race->setRace($newRace);
-                $this->em->persist($race);
-                $this->em->flush();
-            }
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $race = $form->getData();
+            
+            $attachment = $form->get('attachment')->getData();
+            
+            $raceData = $this->fileService->parseRaceCsvToArray($attachment);
+
+            // save race data
+            $this->raceService->saveRaceResults($race, $raceData);
 
             return $this->redirectToRoute('app_results');
-
         }
 
         return $this->render('results/create.html.twig', [

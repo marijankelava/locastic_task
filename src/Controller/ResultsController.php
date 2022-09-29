@@ -10,6 +10,7 @@ use App\Form\ResultsFormType;
 use App\Repository\RaceRepository;
 use App\Repository\ResultsRepository;
 use App\Services\PlacementService;
+use App\Services\EditPlacementService;
 use App\Services\TransformerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +25,7 @@ class ResultsController extends AbstractController
     private PlacementService $placementService;
     private ResultsRepository $resultsRepository;
     private TransformerService $transformerService;
+    private EditPlacementService $editPlacementService;
     private EntityManagerInterface $em;
 
     public function __construct(
@@ -32,6 +34,7 @@ class ResultsController extends AbstractController
         AverageTimeService $averageTimeService,
         PlacementService $placementService,
         TransformerService $transformerService,
+        EditPlacementService $editPlacementService,
         EntityManagerInterface $em
         )
     {
@@ -40,6 +43,7 @@ class ResultsController extends AbstractController
         $this->averageTimeService = $averageTimeService;
         $this->placementService = $placementService;
         $this->transformerService = $transformerService;
+        $this->editPlacementService = $editPlacementService;
         $this->em = $em;
     }
 
@@ -48,23 +52,13 @@ class ResultsController extends AbstractController
      */
     public function results(): Response
     {
-        $mediumResults = $this->raceRepository->findMedium();
-        $longResults = $this->raceRepository->findLong();
-        
-        $mediumTime = $this->averageTimeService->averageMediumTime($mediumResults);
-        $longTime = $this->averageTimeService->averageLongTime($longResults);
+ 
+        $results = $this->raceRepository->findAll();
 
-        //$transformedMed = $this->transformerService->transformMedium($mediumResults);
-
-        //dd($mediumResults, $longResults);
-        //dd($mediumTime, $longTime);
-        //dd($transformedMed);
+        //dd($results);
         
         return $this->render('results/show.html.twig', [
-            'mediumTime' => $mediumTime,
-            'mediumResults' => $mediumResults,
-            'longTime' => $longTime,
-            'longResults' => $longResults
+            'results' => $results
         ]);
     }
 
@@ -83,8 +77,11 @@ class ResultsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $result->setFullName($form->get('fullName')->getData());
             $result->setRaceTime($form->get('raceTime')->getData());
-            //dd($result);
+
+            $this->em->persist($result);
             $this->em->flush();
+
+            // get all race results, sort them by time and resave
 
             return $this->redirectToRoute('app_results');
         }

@@ -77,7 +77,29 @@ class RaceRepository extends ServiceEntityRepository
     }
     */
 
-    public function findMedium(): array
+    public function findAll(){
+
+        $qb = $this->createQueryBuilder('r')
+            ->leftJoin('r.results', 'res')
+            ->addSelect('res.id, res.fullName, res.raceTime, res.placement, res.distance');
+            //->orderBy('res.placement', 'ASC');
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
+
+    public function findByDistance(string $distance): array
+    {     
+            $qb = $this->createQueryBuilder('r')
+              ->leftJoin('r.results', 'res')
+              ->addSelect('res.id, res.fullName, res.raceTime, res.placement, res.distance');
+            $qb->where($qb->expr()->like('res.distance', ':val'))
+               ->setParameter('val', '%' . $distance . '%' );
+              //->orderBy('res.placement', 'ASC');
+
+            return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
+
+    public function editMedium(): array
     {
         $value = 'medium';
         
@@ -91,7 +113,7 @@ class RaceRepository extends ServiceEntityRepository
             return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
-    public function findLong(): array
+    public function editLong(): array
     {
         $value = 'long';
         
@@ -104,4 +126,5 @@ class RaceRepository extends ServiceEntityRepository
 
             return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
+
 }
