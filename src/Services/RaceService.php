@@ -29,8 +29,10 @@ final class RaceService
 
         $mediumRaceResults = $this->sortRaceResultsByTime($mediumRaceResults);
         $longRaceResults = $this->sortRaceResultsByTime($longRaceResults);
-        //dd($mediumRaceResults, $longRaceResults);
-
+        
+        $mediumRaceAverage = $this->calculateAverage($mediumRaceResults);
+        $longRaceAverage = $this->calculateAverage($longRaceResults);
+        
         $this->em->persist($race);
         $this->em->flush();
 
@@ -70,5 +72,18 @@ final class RaceService
         });
 
         return $results;
+    }
+
+    public function calculateAverage(array $results)
+    {
+        foreach ($results as $result) {
+            
+            $totalTime[] = strtotime($result['raceTime']);
+                
+            $average = array_sum($totalTime) / count($totalTime);
+
+            $average = date('H:i:s',$average);
+        }
+        return $average;
     }
 }

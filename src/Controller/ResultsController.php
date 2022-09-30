@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Services\RaceService;
 use App\Form\ResultsFormType;
 use App\Repository\ResultsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,14 +14,17 @@ use Doctrine\ORM\EntityManagerInterface;
 class ResultsController extends AbstractController
 {
     private ResultsRepository $resultsRepository;
+    private RaceService $raceService;
     private EntityManagerInterface $em;
 
     public function __construct(
         ResultsRepository $resultsRepository,
+        RaceService $raceService,
         EntityManagerInterface $em
         )
     {
         $this->resultsRepository = $resultsRepository;
+        $this->raceService = $raceService;
         $this->em = $em;
     }
 
@@ -32,7 +36,6 @@ class ResultsController extends AbstractController
         $mediumResults = $this->resultsRepository->getResults('medium');
         $longResults = $this->resultsRepository->getResults('long');
         
-
         return $this->render('results/show.html.twig', [
             'mediumResults' => $mediumResults,
             'longResults' => $longResults,
