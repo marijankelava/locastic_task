@@ -6,6 +6,8 @@ use App\Entity\Race;
 use App\Form\RaceFormType;
 use App\Services\FileService;
 use App\Services\RaceService;
+use App\Services\SupportedFileTypes;
+use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,8 +50,13 @@ class RaceController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $race = $form->getData();
+            $file = $form->get('attachment')->getData();
+
+            if (SupportedFileTypes::isSupportedFileType($file->getClientOriginalExtension())  !== true) {
+                throw new RuntimeException('Invalid file type');
+            }
             
-            $raceData = $this->fileService->parseRaceCsvToArray($form->get('attachment')->getData());
+            $raceData = $this->fileService->parseRaceCsvToArray($file);
 
             // save race data
             $this->raceService->saveRaceResults($race, $raceData);
