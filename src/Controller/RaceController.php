@@ -16,8 +16,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class RaceController extends AbstractController
 {
 
-    private $fileService;
-    private $raceService;
+    private FileService $fileService;
+    private RaceService $raceService;
 
     public function __construct(
         FileService $fileService,

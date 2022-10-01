@@ -16,7 +16,7 @@ final class RaceService
     {
         $this->em = $em;
     }
-    public function saveRaceResults(Race $race, array $raceData) : void
+    public function saveRaceResults(Race $race, array $raceData)
     {
         //dd($raceData);
         foreach ($raceData as $data) {
@@ -30,13 +30,8 @@ final class RaceService
         $mediumRaceResults = $this->sortRaceResultsByTime($mediumRaceResults);
         $longRaceResults = $this->sortRaceResultsByTime($longRaceResults);
         
-        $mediumRaceAverage = $this->calculateAverage($mediumRaceResults);
-        $longRaceAverage = $this->calculateAverage($longRaceResults);
-        
         $this->em->persist($race);
         $this->em->flush();
-
-        //$finalResult = array_merge($mediumRaceResults, $longRaceResults);
 
         $i = 1;
         foreach($mediumRaceResults as $final){
@@ -72,18 +67,5 @@ final class RaceService
         });
 
         return $results;
-    }
-
-    public function calculateAverage(array $results)
-    {
-        foreach ($results as $result) {
-            
-            $totalTime[] = strtotime($result['raceTime']);
-                
-            $average = array_sum($totalTime) / count($totalTime);
-
-            $average = date('H:i:s',$average);
-        }
-        return $average;
     }
 }

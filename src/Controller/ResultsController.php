@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Services\RaceService;
+use App\Services\TimeService;
 use App\Form\ResultsFormType;
 use App\Repository\ResultsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,17 +14,17 @@ use Doctrine\ORM\EntityManagerInterface;
 class ResultsController extends AbstractController
 {
     private ResultsRepository $resultsRepository;
-    private RaceService $raceService;
+    private TimeService $timeService;
     private EntityManagerInterface $em;
 
     public function __construct(
         ResultsRepository $resultsRepository,
-        RaceService $raceService,
+        TimeService $timeService,
         EntityManagerInterface $em
         )
     {
         $this->resultsRepository = $resultsRepository;
-        $this->raceService = $raceService;
+        $this->timeService = $timeService;
         $this->em = $em;
     }
 
@@ -35,10 +35,15 @@ class ResultsController extends AbstractController
     {
         $mediumResults = $this->resultsRepository->getResults('medium');
         $longResults = $this->resultsRepository->getResults('long');
-        
+
+        $averageMediumTime = $this->timeService->averageTime($mediumResults);
+        $averageLongTime = $this->timeService->averageTime($longResults);
+
         return $this->render('results/show.html.twig', [
             'mediumResults' => $mediumResults,
             'longResults' => $longResults,
+            'averageMediumTime' => $averageMediumTime,
+            'averageLongTime' => $averageLongTime
         ]);
     }
 
@@ -48,6 +53,7 @@ class ResultsController extends AbstractController
     public function edit($id, Request $request):Response
     {
         $result = $this->resultsRepository->find($id);
+        
         $form = $this->createForm(ResultsFormType::class, $result);
 
         $form->handleRequest($request);
@@ -59,7 +65,7 @@ class ResultsController extends AbstractController
             $this->resultsRepository->add($result);
 
             $results = $this->resultsRepository->getResults($result->getDistance());
-
+            
             $i = 1;
             foreach ($results as $result) {
                 $result->setPlacement($i);
